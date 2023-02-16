@@ -21,6 +21,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -36,7 +37,7 @@ class GameFragment : Fragment() {
 
     private lateinit var viewModel: GameViewModel
 
-    // TODO (01) Move over the word, score and wordList variables to the GameViewModel
+//     TODO (01) Move over the word, score and wordList variables to the GameViewModel
 
     private lateinit var binding: GameFragmentBinding
 
@@ -50,8 +51,8 @@ class GameFragment : Fragment() {
         Log.i("GameFragment", "Called ViewModelProvider")
         viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
 
-        // TODO (04) Update these onClickListeners to refer to call methods in the ViewModel then
-        // update the UI
+//         TODO (04) Update these onClickListeners to refer to call methods in the ViewModel then
+//         update the UI
         binding.correctButton.setOnClickListener {
             viewModel.onCorrect()
             updateWordText()
@@ -63,6 +64,13 @@ class GameFragment : Fragment() {
         viewModel.score.observe(viewLifecycleOwner, Observer {newScore ->
             binding.scoreText.text = newScore.toString()
         })
+        viewModel.eventGameFinish.observe(viewLifecycleOwner
+            , Observer { hasFinish ->
+            if(hasFinish){
+                gameFinished()
+                viewModel.onGameFinishComplete()
+            }
+        })
         return binding.root
     }
     // TODO (02) Move over methods resetList, nextWord, onSkip and onCorrect to the GameViewModel
@@ -72,11 +80,12 @@ class GameFragment : Fragment() {
     private fun gameFinished() {
         val action = GameFragmentDirections.actionGameToScore(viewModel.score.value ?:0)
         findNavController(this).navigate(action)
+        Toast.makeText(this.context,"Game Finished", Toast.LENGTH_SHORT).show()
     }
 
     /** Methods for updating the UI **/
 
-    // TODO (05) Update these methods to get word and score from the viewModel
+//    TODO (05) Update these methods to get word and score from the viewModel
     private fun updateWordText() {
         binding.wordText.text = viewModel.word
     }
