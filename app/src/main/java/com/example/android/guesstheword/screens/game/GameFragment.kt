@@ -71,6 +71,9 @@ class GameFragment : Fragment() {
                 viewModel.onGameFinishComplete()
             }
         })
+        viewModel.currentTime.observe(viewLifecycleOwner, Observer { newTime ->
+            binding.timerText.text = newTime.toString()
+        })
         return binding.root
     }
     // TODO (02) Move over methods resetList, nextWord, onSkip and onCorrect to the GameViewModel
